@@ -23,7 +23,18 @@ class App extends Component {
 
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.setState({ screen: "timeline", user: user.toJSON() })
+        const today = new Date()
+        const dateString = today.toISOString().split("T")[0]
+        firebase
+          .database()
+          .ref(`users/${user.uid}/data/${dateString}`)
+          .once("value", snapshot => {
+            if (snapshot.hasChild("date")) {
+              this.setState({ screen: "timeline", user: user.toJSON() })
+            } else {
+              this.setState({ screen: "dayReport", user: user.toJSON() })
+            }
+          })
       }
     })
   }
@@ -32,11 +43,16 @@ class App extends Component {
     this.setState({ screen: "dayReport" })
   }
 
+  handleDayReport = () => {
+    this.setState({ screen: "timeline" })
+  }
+
   render() {
     return (
       <div className="App">
         {React.createElement(screensMap[this.state.screen], {
           onLogin: this.handleLogin,
+          onDayReported: this.handleDayReport,
           user: this.state.user
         })}
       </div>

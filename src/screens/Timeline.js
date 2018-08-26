@@ -45,7 +45,12 @@ class Timeline extends React.Component {
   render() {
     return (
       <div className="Timeline">
-        {this.state.data.map(day => <p>{day.date}</p>)}
+        {this.state.data.map(day => (
+          <p key={day.date}>
+            {day.date} {day.rating} {day.sad1} {day.sad2} {day.glad1}
+            {day.glad2}
+          </p>
+        ))}
       </div>
     )
   }

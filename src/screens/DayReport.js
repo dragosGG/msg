@@ -47,7 +47,10 @@ class DayReport extends React.Component {
     firebase
       .database()
       .ref(`users/${uid}/data/${date}`)
-      .set(this.state)
+      .set(this.state, () => {
+        console.log("asdasdasdasdasdas", this.props)
+        this.props.onDayReported && this.props.onDayReported()
+      })
   }
 
   render() {
