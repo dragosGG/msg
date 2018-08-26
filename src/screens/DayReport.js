@@ -5,6 +5,7 @@ import PropTypes from "prop-types"
 import Button from "@material-ui/core/Button"
 import Rating from "../components/Rating"
 import MoodInputGroup from "../components/MoodInputGroup"
+import firebase from "../config/firebase"
 
 // const styles = {
 //   root: {
@@ -15,12 +16,15 @@ import MoodInputGroup from "../components/MoodInputGroup"
 class DayReport extends React.Component {
   constructor(props) {
     super(props)
+    const today = new Date()
+
     this.state = {
       rating: 7,
       sad1: "",
       sad2: "",
       glad1: "",
-      glad2: ""
+      glad2: "",
+      date: today.toISOString().split("T")[0]
     }
   }
 
@@ -32,12 +36,26 @@ class DayReport extends React.Component {
     this.setState({ [mood]: value })
   }
 
+  save = () => {
+    const { user } = this.props
+    if (!user) {
+      throw new Error("Cant save shit without a user")
+    }
+    const { uid } = user
+    const { date } = this.state
+
+    firebase
+      .database()
+      .ref(`users/${uid}/data/${date}`)
+      .set(this.state)
+  }
+
   render() {
     return (
       <div className="DayReport">
         <Rating onChange={this.handleRatingChange} value={this.state.rating} />
         <MoodInputGroup onChange={this.handleMoodChange} value={this.state} />
-        <Button variant="contained" color="primary">
+        <Button variant="contained" color="primary" onClick={this.save}>
           Save
         </Button>
       </div>
