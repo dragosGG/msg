@@ -15,7 +15,7 @@ class App extends Component {
     super(props)
 
     this.state = {
-      screen: "login"
+      screen: "dayReport"
     }
   }
 

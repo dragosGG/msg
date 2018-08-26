@@ -28,11 +28,15 @@ class DayReport extends React.Component {
     this.setState({ rating })
   }
 
+  handleMoodChange = (mood, value) => {
+    this.setState({ [mood]: value })
+  }
+
   render() {
     return (
       <div className="DayReport">
         <Rating onChange={this.handleRatingChange} value={this.state.rating} />
-        <MoodInputGroup />
+        <MoodInputGroup onChange={this.handleMoodChange} value={this.state} />
         <Button variant="contained" color="primary">
           Save
         </Button>
